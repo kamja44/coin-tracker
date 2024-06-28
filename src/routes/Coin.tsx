@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import { Link, Outlet } from "react-router-dom";
+import { useQuery } from "react-query";
+import { fetchCoinInfo, fetchPriceInfo } from "../api";
 
 interface IInfo {
   id: string;
@@ -101,31 +103,26 @@ const Tab = styled.span<{ $isActive: boolean }>`
     display: block;
   }
 `;
-const API_URL = "https://api.coinpaprika.com/v1/coins";
-const TICKER_URL = "https://api.coinpaprika.com/v1/tickers";
+
 function Coin() {
   const { coinId } = useParams();
-  const [loading, setLoading] = useState(true);
   const { state } = useLocation();
-  const [info, setInfo] = useState<IInfo>();
-  const [priceInfo, setPrice] = useState<IPrice>();
   const priceMatch = useMatch("/:coinId/price");
   const chartMatch = useMatch("/:coinId/chart");
-
-  useEffect(() => {
-    (async () => {
-      const infoData = await (await fetch(`${API_URL}/${coinId}`)).json();
-      const priceData = await (await fetch(`${TICKER_URL}/${coinId}`)).json();
-      setInfo(infoData);
-      setPrice(priceData);
-      setLoading(false);
-    })();
-  }, [coinId]);
+  const { isLoading: infoLoading, data: infoData } = useQuery<IInfo>(
+    ["info", coinId]!,
+    () => fetchCoinInfo(coinId!)
+  );
+  const { isLoading: tickersLoading, data: tickersData } = useQuery<IPrice>(
+    ["ticker", coinId]!,
+    () => fetchPriceInfo(coinId!)
+  );
+  const loading = infoLoading || tickersLoading;
   return (
     <Container>
       <Header>
         <Title>
-          {state?.name ? state.name : loading ? "Loading..." : info?.name}
+          {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
         </Title>
       </Header>
       {loading ? (
@@ -135,26 +132,26 @@ function Coin() {
           <Overview>
             <OverviewItem>
               <span>Rank:</span>
-              <span>{info?.rank}</span>
+              <span>{infoData?.rank}</span>
             </OverviewItem>
             <OverviewItem>
               <span>Symbol:</span>
-              <span>${info?.symbol}</span>
+              <span>${infoData?.symbol}</span>
             </OverviewItem>
             <OverviewItem>
               <span>Open Source:</span>
-              <span>{info?.open_source ? "Yes" : "No"}</span>
+              <span>{infoData?.open_source ? "Yes" : "No"}</span>
             </OverviewItem>
           </Overview>
-          <Description>{info?.description}</Description>
+          <Description>{infoData?.description}</Description>
           <Overview>
             <OverviewItem>
               <span>Total Suply:</span>
-              <span>{priceInfo?.total_supply}</span>
+              <span>{tickersData?.total_supply}</span>
             </OverviewItem>
             <OverviewItem>
               <span>Max Supply:</span>
-              <span>{priceInfo?.max_supply}</span>
+              <span>{tickersData?.max_supply}</span>
             </OverviewItem>
           </Overview>
           <Tabs>
