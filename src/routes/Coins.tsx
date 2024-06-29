@@ -7,8 +7,9 @@ import { Helmet } from "react-helmet";
 
 const CoinList = styled.ul``;
 const Coin = styled.li`
-  background-color: white;
-  color: ${(props) => props.theme.bgColor};
+  background-color: ${(props) => props.theme.cardBgColor};
+  color: ${(props) => props.theme.textColor};
+  border: 1px solid white;
   padding: 20px;
   border-radius: 15px;
   margin-bottom: 10px;
