@@ -2,6 +2,7 @@
   "name": "coin-tracker",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://kamja.github.io/coin-tracker",
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -12,6 +13,7 @@
     "@types/react-dom": "^18.3.0",
     "@types/styled-components": "^5.1.34",
     "apexcharts": "^3.49.2",
+    "gh-pages": "^6.1.1",
     "react": "^18.3.1",
     "react-apexcharts": "^1.4.1",
     "react-dom": "^18.3.1",
@@ -28,7 +30,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
