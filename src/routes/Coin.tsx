@@ -5,7 +5,9 @@ import { Helmet } from "react-helmet";
 import { Link, Outlet } from "react-router-dom";
 import { useQuery } from "react-query";
 import { fetchCoinInfo, fetchPriceInfo } from "../api";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHouseChimney } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 interface IInfo {
   id: string;
   name: string;
@@ -93,9 +95,10 @@ const Tab = styled.span<{ $isActive: boolean }>`
   text-transform: uppercase;
   font-size: 20px;
   font-weight: 700;
-  background-color: rgba(0, 0, 0);
+  background-color: ${(props) => props.theme.cardBgColor};
   padding: 7px 0px;
   border-radius: 10px;
+  color: ${(props) => props.theme.textColor};
   color: ${(props) =>
     props.$isActive ? props.theme.accentColor : props.theme.textColor};
   a {
@@ -104,6 +107,7 @@ const Tab = styled.span<{ $isActive: boolean }>`
 `;
 
 function Coin() {
+  const navigate = useNavigate();
   const { coinId } = useParams();
   const { state } = useLocation();
   const priceMatch = useMatch("/:coinId/price");
@@ -117,6 +121,9 @@ function Coin() {
     () => fetchPriceInfo(coinId!)
   );
   const loading = infoLoading || tickersLoading;
+  const onClickHome = () => {
+    navigate("/");
+  };
   return (
     <Container>
       <Helmet>
@@ -128,6 +135,12 @@ function Coin() {
         <Title>
           {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
         </Title>
+        &nbsp;
+        <FontAwesomeIcon
+          style={{ cursor: "pointer" }}
+          icon={faHouseChimney}
+          onClick={onClickHome}
+        />
       </Header>
       {loading ? (
         <Loader>Loading...</Loader>

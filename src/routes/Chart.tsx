@@ -23,60 +23,45 @@ function Chart() {
   const { isLoading, data } = useQuery<IData[]>(["ohlcv", coinId], () =>
     fetchCoinHistory(coinId)
   );
+  console.log(data);
   return (
     <div>
       {isLoading ? (
         "Loading Chart..."
       ) : (
         <ApexChart
-          type="line"
+          type="candlestick"
           series={[
             {
-              name: "price",
-              data: data?.map((price) => Number(price.close)) ?? [],
+              data: data!.map((item) => [
+                item.time_open,
+                Number(item.open),
+                Number(item.high),
+                Number(item.low),
+                Number(item.close),
+              ]),
             },
           ]}
           options={{
-            tooltip: {
-              y: {
-                formatter: (value) => `$ ${value.toFixed(2)}`,
-              },
+            chart: {
+              type: "candlestick",
+              height: 350,
             },
             theme: {
-              mode: isDark ? "dark" : "light",
+              mode: isDark ? "light" : "dark",
             },
-            chart: {
-              height: 500,
-              width: 500,
-              toolbar: {
-                show: false,
-              },
-            },
-            stroke: {
-              curve: "smooth",
-            },
-            yaxis: {
-              show: false,
+            title: {
+              text: "CandleStick Chart",
+              align: "left",
             },
             xaxis: {
-              labels: {
-                show: false,
-              },
-              axisTicks: {
-                show: false,
-              },
               type: "datetime",
-              categories: data?.map((price) => price.time_close),
             },
-            fill: {
-              type: "gradient",
-              gradient: {
-                gradientToColors: ["blue"],
-                stops: [0, 100],
+            yaxis: {
+              tooltip: {
+                enabled: true,
               },
             },
-
-            colors: ["red"],
           }}
         />
       )}

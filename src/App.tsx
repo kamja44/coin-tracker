@@ -72,7 +72,7 @@ function App() {
   const isDark = useRecoilValue(isDarkAtom);
   return (
     <>
-      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+      <ThemeProvider theme={isDark ? lightTheme : darkTheme}>
         <GlobalStyle />
         <Router />
         <ReactQueryDevtools initialIsOpen={true} />

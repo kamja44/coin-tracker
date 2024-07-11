@@ -6,6 +6,8 @@ import { fetchCoins } from "../api";
 import { Helmet } from "react-helmet";
 import { useSetRecoilState } from "recoil";
 import { isDarkAtom } from "../atoms";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSun } from "@fortawesome/free-solid-svg-icons";
 
 const CoinList = styled.ul``;
 const Coin = styled.li`
@@ -49,8 +51,9 @@ function Coins() {
         <title>코인</title>
       </Helmet>
       <Header>
-        <Title>코인</Title>
-        <button onClick={toggleDarkAtom}>Toggle Mode</button>
+        <Title>코인</Title>&nbsp;
+        <FontAwesomeIcon icon={faSun} onClick={toggleDarkAtom} />
+        {/* <button onClick={toggleDarkAtom}>Toggle Mode</button> */}
       </Header>
       {isLoading ? (
         <Loader>Loading...</Loader>
